@@ -4,14 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.fani.API.ApiConfig;
 import com.example.fani.API.ApiService;
 import com.example.fani.adapter.NarutoAdapter;
+import com.example.fani.alarm.AlarmActivity;
 import com.example.fani.model.ResultsItem;
 import com.example.fani.model.RootNarutoModel;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -19,10 +26,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
+
 public class MainActivity extends AppCompatActivity {
     private RecyclerView rv;
     private ArrayList<ResultsItem> resultsItems;
     private NarutoAdapter narutoAdapter;
+    private Text alarm;
+    private SharedPreferences preferences;
+    private String sharedPrefFile = "com.example.fani";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         initView();
         resultsItems = new ArrayList<>();
         getData();
+        preferences = getSharedPreferences(sharedPrefFile,MODE_PRIVATE);
     }
 
     private void getData() {
@@ -55,6 +68,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
         rv = findViewById(R.id.rv);
+        alarm = findViewById(R.id.alarm);
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.alarm:
+                Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
+                String mOrderMessage = null;
+                intent.putExtra(EXTRA_MESSAGE, mOrderMessage);
+                startActivity(intent);
+                return true;
+            default:
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences.Editor preferencesEditor = preferences.edit();
+        preferencesEditor.apply();
     }
 
 }

@@ -11,7 +11,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FANI">
-        <activity android:name=".DetailActivity"></activity>
+        <activity
+            android:name=".alarm.AlarmActivity"
+            android:label="ALARM"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <receiver
+            android:name=".alarm.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
         <activity
             android:name=".SplashActivity"
             android:theme="@style/Theme.MaterialComponents.NoActionBar">
@@ -22,6 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>
